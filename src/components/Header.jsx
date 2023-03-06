@@ -5,8 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setSearch } from '../redux/reducers/headerSearch';
 import SearchBar from './SearchBar';
 
-// eslint-disable-next-line react/require-default-props
-function Header({ title, haveSearch }) {
+function Header({ title }) {
   const [searcher, setSearcher] = useState(false);
   const [searchInput, setSearchInput] = useState('');
 
@@ -44,13 +43,8 @@ function Header({ title, haveSearch }) {
   );
 }
 
-Header.defaultProps = {
-  haveSearch: true,
-};
-
 Header.propTypes = {
   title: propTypes.string.isRequired,
-  haveSearch: propTypes.bool,
 };
 
 export default Header;

@@ -6,6 +6,7 @@ function Drinks() {
     <div>
       <Header
         title="Drinks"
+        haveSearch
       />
     </div>
   );

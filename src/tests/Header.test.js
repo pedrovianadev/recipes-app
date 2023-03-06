@@ -4,7 +4,7 @@ import renderWithRouter from './renderWithRouter/renderWithRouter';
 import App from '../App';
 
 describe('Testa o componente <Header />', () => {
-  it('Checa se o componente Header possui o botao perfil, titulo e botao de pesquisa', async () => {
+  it('Checa se o Header possui o botão perfil, titulo e botao de pesquisa', async () => {
     const { history } = renderWithRouter(<App />);
     history.push('/drinks');
     await waitForElementToBeRemoved(() => screen.getByTestId('email-input'));
@@ -16,7 +16,7 @@ describe('Testa o componente <Header />', () => {
     expect(searchButton).toBeInTheDocument();
   });
 
-  it('Checa se ao clicar no botao de pesquisar, o input aparece', async () => {
+  it('Checa se ao clicar no botão de pesquisar, o input aparece', async () => {
     const { history } = renderWithRouter(<App />);
     history.push('/drinks');
     await waitForElementToBeRemoved(() => screen.getByTestId('email-input'));

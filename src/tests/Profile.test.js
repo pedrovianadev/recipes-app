@@ -8,7 +8,7 @@ const PROFILE_DONE_BTN = 'profile-done-btn';
 const PROFILE_FAVORITE_BTN = 'profile-favorite-btn';
 
 describe('Testa o componente Profile', () => {
-  it('Verifica se o componente <Profile /> possui o botao Done Recipes, Favorite Recipes e botao de Logout.', async () => {
+  it('Verifica se o componente Profile tem o botao Done Recipes, Favorite Recipes e botao de Logout.', async () => {
     renderWithRouter(<Profile />);
 
     const profileButton = screen.getByTestId('profile-email');
@@ -22,7 +22,7 @@ describe('Testa o componente Profile', () => {
     expect(logoutBtn).toBeInTheDocument();
   });
 
-  it('Verifica se o componente <Profile /> possui botões e estão funcionando.', async () => {
+  it('Verifica se o componente Profile tem botões e estão funcionando.', async () => {
     renderWithRouter(<Profile />);
     const doneBtn = screen.getByTestId(PROFILE_DONE_BTN);
     const favoriteBtn = screen.getByTestId(PROFILE_FAVORITE_BTN);

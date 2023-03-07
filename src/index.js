@@ -6,14 +6,17 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import RecipesProvider from './context/recipesProvider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <Provider store={ store }>
-        <App />
-      </Provider>
+      <RecipesProvider>
+        <Provider store={ store }>
+          <App />
+        </Provider>
+      </RecipesProvider>
     </BrowserRouter>,
   );
 

@@ -1,4 +1,10 @@
 // Meals API
+const mealsRequest = async () => {
+  const URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+  const response = await fetch(URL);
+  const data = await response.json();
+  return data;
+};
 
 const findMealByIngredient = async (ingredient) => {
   const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`);
@@ -19,6 +25,13 @@ const findMealByFirstLetter = async (letter) => {
 };
 
 // Cocktails API
+
+const drinksRequest = async () => {
+  const URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+  const response = await fetch(URL);
+  const data = await response.json();
+  return data;
+};
 
 const findCocktailByIngredient = async (ingredient) => {
   const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient}`);
@@ -45,4 +58,6 @@ export {
   findCocktailByIngredient,
   findCocktailByName,
   findCocktailByFirstLetter,
+  mealsRequest,
+  drinksRequest,
 };

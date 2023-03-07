@@ -7,6 +7,7 @@ function Meals() {
     <div>
       <Header
         title="Meals"
+        haveSearch
       />
       <Footer />
     </div>

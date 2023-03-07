@@ -7,6 +7,7 @@ function Drinks() {
     <div>
       <Header
         title="Drinks"
+        haveSearch
       />
       <Footer />
     </div>

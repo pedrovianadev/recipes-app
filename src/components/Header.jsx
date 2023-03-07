@@ -25,7 +25,7 @@ function Header({ title }) {
         <img src="../images/profileIcon.svg" data-testid="profile-top-btn" alt="icon" />
       </Link>
       <h1 data-testid="page-title">{title}</h1>
-      {haveSearch && (
+      {setSearch && (
         <button type="button" onClick={ () => setSearcher(!searcher) }>
           <img src="../images/searchIcon.svg" data-testid="search-top-btn" alt="icon" />
         </button>

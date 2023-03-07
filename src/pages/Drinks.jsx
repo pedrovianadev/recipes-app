@@ -11,6 +11,7 @@ function Drinks() {
     <div>
       <Header
         title="Drinks"
+        haveSearch
       />
       {drinks.drinks?.length > 0
         ? drinks.drinks.slice(0, slice).map((drink, index) => (

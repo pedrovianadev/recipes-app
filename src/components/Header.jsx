@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { setSearch } from '../redux/reducers/headerSearch';
 import SearchBar from './SearchBar';
 
-function Header({ title }) {
+function Header({ title, haveSearch }) {
   const [searcher, setSearcher] = useState(false);
   const [searchInput, setSearchInput] = useState('');
 
@@ -45,6 +45,7 @@ function Header({ title }) {
 
 Header.propTypes = {
   title: propTypes.string.isRequired,
+  haveSearch: propTypes.bool.isRequired,
 };
 
 export default Header;

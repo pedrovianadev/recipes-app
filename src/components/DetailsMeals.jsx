@@ -19,14 +19,12 @@ export function DetailsMeals() {
         return false;
       });
     const arrIngredients = filteredIngredients.map((array) => array[1]);
-    console.log(arrIngredients);
     setIngredients(arrIngredients);
 
     const getMeasures = getIngredients
       .filter(([key, value]) => key.includes('strMeasure') && value !== ' ');
     const arrMeasures = getMeasures.map((array) => array[1]);
     setMeasures(arrMeasures);
-    console.log(arrMeasures);
   };
 
   const fetchDetailsMeals = useCallback(async () => {
@@ -35,7 +33,6 @@ export function DetailsMeals() {
     const json = await response.json();
     const detailsObj = json.meals[0];
     setRecipeDetails(detailsObj);
-    // console.log(detailsObj.strYoutube.split('=')[1]);
     const urlRecipe = detailsObj.strYoutube.split('=')[1];
     const urlYouTube = `https://www.youtube.com/embed/${urlRecipe}`;
     setUrlVideo(urlYouTube);
@@ -46,8 +43,6 @@ export function DetailsMeals() {
   useEffect(() => {
     fetchDetailsMeals();
   }, [fetchDetailsMeals]);
-
-  // console.log(recipeDetails);
 
   return (
     <div>

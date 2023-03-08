@@ -18,14 +18,12 @@ export function DetailsDrinks() {
         return false;
       });
     const arrIngredients = filteredIngredients.map((array) => array[1]);
-    console.log(arrIngredients);
     setIngredients(arrIngredients);
 
     const getMeasures = getIngredients
       .filter(([key, value]) => key.includes('strMeasure') && value !== null);
     const arrMeasures = getMeasures.map((array) => array[1]);
     setMeasures(arrMeasures);
-    console.log(arrMeasures);
   };
 
   const fetchDetailDrinks = useCallback(async () => {
@@ -41,8 +39,6 @@ export function DetailsDrinks() {
   useEffect(() => {
     fetchDetailDrinks();
   }, [fetchDetailDrinks]);
-
-  console.log(drinkDetails);
 
   return (
     <div>

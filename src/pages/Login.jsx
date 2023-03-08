@@ -52,7 +52,7 @@ export function Login() {
         Entrar
       </button>
 
-      <span className="logo">TRYBE</span>
+      <span className="logo">FAÇA SEU LOGIN!</span>
       <object
         className="rocksGlass"
         type="image/svg+xml"

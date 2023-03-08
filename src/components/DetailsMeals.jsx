@@ -40,18 +40,9 @@ export function DetailsMeals() {
     return Promise.resolve(detailsObj);
   }, [id]);
 
-  const fetchApiDrinks = useCallback(async () => {
-    const apiDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
-    const response = await fetch(apiDrinks);
-    const json = await response.json();
-    console.log(json);
-    return Promise.resolve(json);
-  }, []);
-
   useEffect(() => {
     fetchDetailsMeals();
-    fetchApiDrinks();
-  }, [fetchDetailsMeals, fetchApiDrinks]);
+  }, [fetchDetailsMeals]);
 
   return (
     <div>

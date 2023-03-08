@@ -36,16 +36,8 @@ export function DetailsDrinks() {
     return Promise.resolve(detailsObj);
   }, [id]);
 
-  const fetchApiMeals = async () => {
-    const apiMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
-    const response = await fetch(apiMeals);
-    const json = await response.json();
-    console.log(json);
-  };
-
   useEffect(() => {
     fetchDetailDrinks();
-    fetchApiMeals();
   }, [fetchDetailDrinks]);
 
   return (

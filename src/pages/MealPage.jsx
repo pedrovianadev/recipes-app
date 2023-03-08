@@ -1,8 +1,11 @@
-import React from 'react';
+import { DetailsMeals } from '../components/DetailsMeals';
 
 function MealPage() {
   return (
-    <div>MealPage</div>
+    <div>
+      <h1>MealPage</h1>
+      <DetailsMeals />
+    </div>
   );
 }
 

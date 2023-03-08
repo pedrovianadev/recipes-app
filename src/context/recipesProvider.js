@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import RecipesContext from './recipesContext';
-import { mealsRequest, drinksRequest } from '../services/api';
+import { mealsRequest, drinksRequest,
+  mealsCategory, drinksCategory } from '../services/api';
 
 export default function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
+  const [mealsCategories, setMealsCategories] = useState([]);
+  const [drinksCategories, setDrinksCategories] = useState([]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -13,6 +16,10 @@ export default function RecipesProvider({ children }) {
       setMeals(recipesMeals);
       const recipesDrinks = await drinksRequest();
       setDrinks(recipesDrinks);
+      const mealsCat = await mealsCategory();
+      setMealsCategories(mealsCat);
+      const drinksCat = await drinksCategory();
+      setDrinksCategories(drinksCat);
     };
     fetch();
   }, []);
@@ -22,7 +29,11 @@ export default function RecipesProvider({ children }) {
     setMeals,
     drinks,
     setDrinks,
-  }), [meals, drinks]);
+    mealsCategories,
+    setMealsCategories,
+    drinksCategories,
+    setDrinksCategories,
+  }), [meals, drinks, mealsCategories, drinksCategories]);
 
   return (
     <RecipesContext.Provider value={ value }>

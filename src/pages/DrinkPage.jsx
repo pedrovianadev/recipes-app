@@ -6,6 +6,12 @@ function DrinkPage() {
     <div>
       <h1>DrinkPage</h1>
       <DetailsDrinks />
+      <button
+        data-testid="start-recipe-btn"
+        className="Start-Recipe"
+      >
+        Start Recipe
+      </button>
     </div>
   );
 }

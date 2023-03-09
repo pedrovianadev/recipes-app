@@ -1,11 +1,13 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { RecommendationCard } from './RecommendationCard';
 
 export function DetailsMeals() {
   const [recipeDetails, setRecipeDetails] = useState({});
   const [urlVideo, setUrlVideo] = useState('');
   const [ingredients, setIngredients] = useState([]);
   const [measures, setMeasures] = useState([]);
+  const [stateDrinks, setStateDrinks] = useState([]);
 
   const { id } = useParams();
 
@@ -40,9 +42,19 @@ export function DetailsMeals() {
     return Promise.resolve(detailsObj);
   }, [id]);
 
+  const fetchApiDrinks = useCallback(async () => {
+    const apiDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+    const response = await fetch(apiDrinks);
+    const json = await response.json();
+    const arrayDrinks = json.drinks;
+    setStateDrinks(arrayDrinks);
+    return Promise.resolve(arrayDrinks);
+  }, []);
+
   useEffect(() => {
     fetchDetailsMeals();
-  }, [fetchDetailsMeals]);
+    fetchApiDrinks();
+  }, [fetchDetailsMeals, fetchApiDrinks]);
 
   return (
     <div>
@@ -73,6 +85,8 @@ export function DetailsMeals() {
         title="YT"
         data-testid="video"
       />
+
+      <RecommendationCard stateDrinksOrMeals={ stateDrinks } />
 
     </div>
   );

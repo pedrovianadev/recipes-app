@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { RecommendationCard } from './RecommendationCard';
 
 export function DetailsDrinks() {
   const [drinkDetails, setDrinkDetails] = useState({});
   const [ingredients, setIngredients] = useState([]);
   const [measures, setMeasures] = useState([]);
+  const [stateMeals, setStateMeals] = useState([]);
 
   const { id } = useParams();
 
@@ -36,8 +38,18 @@ export function DetailsDrinks() {
     return Promise.resolve(detailsObj);
   }, [id]);
 
+  const fetchApiMeals = async () => {
+    const apiMeals = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+    const response = await fetch(apiMeals);
+    const json = await response.json();
+    const arrayMeals = json.meals;
+    setStateMeals(arrayMeals);
+    return Promise.resolve(arrayMeals);
+  };
+
   useEffect(() => {
     fetchDetailDrinks();
+    fetchApiMeals();
   }, [fetchDetailDrinks]);
 
   return (
@@ -61,6 +73,8 @@ export function DetailsDrinks() {
         ))}
 
       <p data-testid="instructions">{drinkDetails.strInstructions}</p>
+
+      <RecommendationCard stateDrinksOrMeals={ stateMeals } />
 
     </div>
   );

@@ -7,6 +7,7 @@ function FavoriteRecipesCard({ index }) {
   const tagName1 = 'Pasta';
   const tagName2 = 'Curry';
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
+  const [mostrarMensagem2, setMostrarMensagem2] = useState(false);
 
   function copyToClipboard() {
     const textToCopy = 'http://localhost:3000/meals/52771';
@@ -16,6 +17,15 @@ function FavoriteRecipesCard({ index }) {
       console.error('Falha ao copiar a string para o clipboard', err);
     });
     setMostrarMensagem(true);
+  }
+  function copyToClipboard2() {
+    const textToCopy = 'http://localhost:3000/meals/52771';
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      console.log('String copiada para o clipboard');
+    }).catch((err) => {
+      console.error('Falha ao copiar a string para o clipboard', err);
+    });
+    setMostrarMensagem2(true);
   }
   return (
     <div>
@@ -37,10 +47,12 @@ function FavoriteRecipesCard({ index }) {
       <button
         data-testid={ `${index}-horizontal-favorite-btn` }
         src={ logo2 }
+        onClick={ copyToClipboard2 }
       >
         Favoritar Receita
 
       </button>
+      {mostrarMensagem2 && <div>Link copied!</div>}
     </div>
   );
 }

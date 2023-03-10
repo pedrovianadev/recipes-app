@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import FavoriteRecipesCard from '../components/FavoriteRecipesCard';
+import FavoriteMealCard from '../components/FavoriteMealCard';
+import FavoriteDrinkCard from '../components/FavoriteDrinkCard';
 import FilterDonePag from '../components/FilterDonePag';
 import { getFavoriteRecipes } from '../services/saveFavoriteRecipes';
 
 function FavoriteRecipes() {
   const [array, setArray] = useState([]);
-  const showMusics = async () => {
+  const showRecipes = async () => {
     const musics = await getFavoriteRecipes();
     setArray(musics);
   };
-  useEffect(() => {
-    showMusics();
-  });
-  console.log(array);
+  useEffect(
+    () => {
+      showRecipes();
+    },
+    [array],
+  );
   return (
     <div>
       <Header
@@ -21,11 +24,23 @@ function FavoriteRecipes() {
         haveSearch={ false }
       />
       <FilterDonePag />
-      {array.map((recipes, index) => (<FavoriteRecipesCard
-        recipe={ recipes }
-        index={ index }
-        key={ index }
-      />))}
+      {array.map((recipes, index) => (
+        recipes.type === 'meal'
+          ? (
+            <FavoriteMealCard
+              recipe={ recipes }
+              index={ index }
+              key={ index }
+            />
+          )
+          : (
+            <FavoriteDrinkCard
+              recipe={ recipes }
+              index={ index }
+              key={ index }
+            />
+          )
+      ))}
     </div>
   );
 }

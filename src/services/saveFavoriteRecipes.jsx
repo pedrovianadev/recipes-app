@@ -29,7 +29,7 @@ export const addRecipe = (recipe) => new Promise((resolve) => {
   simulateRequest(SUCCESS_STATUS)(resolve);
 });
 
-export const removeSong = (recipe) => new Promise((resolve) => {
+export const removeRecipe = (recipe) => new Promise((resolve) => {
   const favoriteRecipes = readFavoriteRecipes();
   saveFavoriteRecipes(favoriteRecipes.filter((r) => r.id !== recipe.id));
   simulateRequest(SUCCESS_STATUS)(resolve);

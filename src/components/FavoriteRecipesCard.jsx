@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import logo from '../images/shareIcon.svg';
 import logo2 from '../images/blackHeartIcon.svg';
 
-function FavoriteRecipesCard({ index }) {
-  const tagName1 = 'Pasta';
-  const tagName2 = 'Curry';
+function FavoriteRecipesCard({ recipe, index }) {
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
   const [mostrarMensagem2, setMostrarMensagem2] = useState(false);
 
@@ -29,10 +27,23 @@ function FavoriteRecipesCard({ index }) {
   }
   return (
     <div>
-      <img alt="foodpicture" src="https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg" data-testid={ `${index}-horizontal-image` } />
-      <h3 data-testid={ `${index}-horizontal-name` }>Spicy Arrabiata Penne</h3>
-      <p data-testid={ `${index}-horizontal-top-text` }>Italian - Vegetarian</p>
-      <p data-testid={ `${index}-horizontal-done-date` }>23/06/2020</p>
+      <img
+        alt="foodpicture"
+        src={ recipe.image }
+        data-testid={ `${index}-horizontal-image` }
+      />
+      <h3
+        data-testid={ `${index}-horizontal-name` }
+      >
+        {recipe.name}
+
+      </h3>
+      <p
+        data-testid={ `${index}-horizontal-top-text` }
+      >
+        {`${recipe.nationality} - ${recipe.category}`}
+
+      </p>
       <button
         onClick={ copyToClipboard }
         data-testid={ `${index}-horizontal-share-btn` }
@@ -42,8 +53,6 @@ function FavoriteRecipesCard({ index }) {
 
       </button>
       {mostrarMensagem && <div>Link copied!</div>}
-      <p data-testid={ `${index}-${tagName1}-horizontal-tag` }>{tagName1}</p>
-      <p data-testid={ `${index}-${tagName2}-horizontal-tag` }>{tagName2}</p>
       <button
         data-testid={ `${index}-horizontal-favorite-btn` }
         src={ logo2 }
@@ -58,7 +67,12 @@ function FavoriteRecipesCard({ index }) {
 }
 FavoriteRecipesCard.propTypes = {
   index: PropTypes.number.isRequired,
-
+  recipe: PropTypes.shape({
+    category: PropTypes.string,
+    image: PropTypes.string,
+    name: PropTypes.string,
+    nationality: PropTypes.string,
+  }).isRequired,
 };
 
 export default FavoriteRecipesCard;

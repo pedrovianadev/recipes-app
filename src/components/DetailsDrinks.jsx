@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RecommendationCard } from './RecommendationCard';
+import { addRecipe } from '../services/saveFavoriteRecipes';
 
 export function DetailsDrinks() {
   const [drinkDetails, setDrinkDetails] = useState({});
   const [ingredients, setIngredients] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [stateMeals, setStateMeals] = useState([]);
+  const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   const { id } = useParams();
 
@@ -47,6 +49,32 @@ export function DetailsDrinks() {
     return Promise.resolve(arrayMeals);
   };
 
+  function copyToClipboard() {
+    const textToCopy = window.location.href;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      console.log('String copiada para o clipboard');
+    }).catch((err) => {
+      console.error('Falha ao copiar a string para o clipboard', err);
+    });
+    setMostrarMensagem(true);
+  }
+
+  const recipe = {
+    id: drinkDetails.idDrink,
+    type: 'drink',
+    nationality: '',
+    category: drinkDetails.strCategory,
+    alcoholicOrNot: drinkDetails.strAlcoholic,
+    name: drinkDetails.strDrink,
+    image: drinkDetails.strDrinkThumb,
+  };
+
+  console.log(drinkDetails);
+
+  const favorite = async () => {
+    await addRecipe(recipe);
+  };
+
   useEffect(() => {
     fetchDetailDrinks();
     fetchApiMeals();
@@ -54,7 +82,9 @@ export function DetailsDrinks() {
 
   return (
     <div>
-
+      <button data-testid="share-btn" onClick={ copyToClipboard }>Compartilhar</button>
+      <button data-testid="favorite-btn" onClick={ favorite }>Favorite</button>
+      {mostrarMensagem && <div>Link copied!</div>}
       <img
         src={ drinkDetails.strDrinkThumb }
         alt="drink"

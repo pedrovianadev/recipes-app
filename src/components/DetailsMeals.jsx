@@ -8,6 +8,7 @@ export function DetailsMeals() {
   const [ingredients, setIngredients] = useState([]);
   const [measures, setMeasures] = useState([]);
   const [stateDrinks, setStateDrinks] = useState([]);
+  const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   const { id } = useParams();
 
@@ -51,6 +52,16 @@ export function DetailsMeals() {
     return Promise.resolve(arrayDrinks);
   }, []);
 
+  function copyToClipboard() {
+    const textToCopy = window.location.href;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      console.log('String copiada para o clipboard');
+    }).catch((err) => {
+      console.error('Falha ao copiar a string para o clipboard', err);
+    });
+    setMostrarMensagem(true);
+  }
+
   useEffect(() => {
     fetchDetailsMeals();
     fetchApiDrinks();
@@ -58,8 +69,9 @@ export function DetailsMeals() {
 
   return (
     <div>
-      <button data-testid="share-btn">Compartilhar</button>
+      <button data-testid="share-btn" onClick={ copyToClipboard }>Compartilhar</button>
       <button data-testid="favorite-btn">Favorite</button>
+      {mostrarMensagem && <div>Link copied!</div>}
       <img
         src={ recipeDetails.strMealThumb }
         alt="meal"

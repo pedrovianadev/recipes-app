@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RecommendationCard } from './RecommendationCard';
+import { addRecipe } from '../services/saveFavoriteRecipes';
 
 export function DetailsMeals() {
   const [recipeDetails, setRecipeDetails] = useState({});
@@ -62,6 +63,22 @@ export function DetailsMeals() {
     setMostrarMensagem(true);
   }
 
+  const recipe = {
+    id: recipeDetails.idMeal,
+    type: 'meal',
+    nationality: recipeDetails.strArea,
+    category: recipeDetails.strCategory,
+    alcoholicOrNot: '',
+    name: recipeDetails.strMeal,
+    image: recipeDetails.strMealThumb,
+  };
+
+  console.log(recipeDetails);
+
+  const favorite = async () => {
+    await addRecipe(recipe);
+  };
+
   useEffect(() => {
     fetchDetailsMeals();
     fetchApiDrinks();
@@ -70,7 +87,7 @@ export function DetailsMeals() {
   return (
     <div>
       <button data-testid="share-btn" onClick={ copyToClipboard }>Compartilhar</button>
-      <button data-testid="favorite-btn">Favorite</button>
+      <button data-testid="favorite-btn" onClick={ favorite }>Favorite</button>
       {mostrarMensagem && <div>Link copied!</div>}
       <img
         src={ recipeDetails.strMealThumb }

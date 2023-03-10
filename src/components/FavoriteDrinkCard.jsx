@@ -19,6 +19,7 @@ function FavoriteDrinkCard({ recipe, index }) {
   const removeFavorite = async () => {
     await removeRecipe(recipe);
   };
+  console.log(recipe);
   return (
     <div>
       <img

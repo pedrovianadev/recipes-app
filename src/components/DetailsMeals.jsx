@@ -73,8 +73,6 @@ export function DetailsMeals() {
     image: recipeDetails.strMealThumb,
   };
 
-  console.log(recipeDetails);
-
   const favorite = async () => {
     await addRecipe(recipe);
   };

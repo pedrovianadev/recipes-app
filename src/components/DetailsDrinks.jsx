@@ -54,7 +54,8 @@ export function DetailsDrinks() {
 
   return (
     <div>
-
+      <button data-testid="share-btn">Compartilhar</button>
+      <button data-testid="favorite-btn">Favorite</button>
       <img
         src={ drinkDetails.strDrinkThumb }
         alt="drink"

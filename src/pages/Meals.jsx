@@ -51,7 +51,6 @@ function Meals() {
         data-testid="All-category-filter"
       >
         All
-
       </button>
       {meals.meals?.length > 0
         ? meals.meals.slice(0, slice).map((meal, index) => (

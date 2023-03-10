@@ -3,7 +3,7 @@ import { screen, waitForElementToBeRemoved, waitFor } from '@testing-library/rea
 import renderWithRouter from './renderWithRouter/renderWithRouter';
 import App from '../App';
 
-describe('Testa o componente <Header />', () => {
+describe('Testa o componente Header', () => {
   it('Checa se o Header possui o botão perfil, titulo e botao de pesquisa', async () => {
     const { history } = renderWithRouter(<App />);
     history.push('/drinks');

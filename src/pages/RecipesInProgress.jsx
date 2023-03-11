@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getMealsByID, getDrinksByID } from '../services/api';
-
+import IngredientsCards from '../components/IngredientsCards';
 // Só pra mandar novamente o PR
 
 function RecipesInProgress() {
@@ -27,6 +27,10 @@ function RecipesInProgress() {
       getDrinks();
     }
   }, [typeOfRecipe]);
+
+  // const handleCheckbox = ({target}) => {
+  //   target.checked ? (text-decoration: line-through solid rgb(0, 0, 0)) : null;
+  // };
 
   return (
     <div>
@@ -60,16 +64,14 @@ function RecipesInProgress() {
           <ul>
             {Object.keys(recipe).map((key, index) => {
               if (key.includes('Ingredient') && recipe[key]) {
+                // const completed = false;
                 return (
                   <li key={ index }>
-                    <label htmlFor={ key } data-testid={ `${index}-ingredient-step` }>
-                      <input
-                        type="checkbox"
-                        id={ key }
-                      />
-                      {recipe[key]}
-                    </label>
-
+                    <IngredientsCards
+                      key={ key }
+                      index={ index }
+                      recipe={ recipe[key] }
+                    />
                   </li>
                 );
               }

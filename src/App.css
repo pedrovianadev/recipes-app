@@ -71,3 +71,11 @@
   bottom: 0;
   position: fixed;
 }
+
+.Checkbox-recipes {
+  text-decoration: line-through solid rgb(0, 0, 0)
+}
+
+/* input[type=checkbox]:checked + label.Checkbox-recipes{
+  text-decoration: line-through;
+} */

@@ -24,9 +24,4 @@ IngredientsCards.propTypes = {
   index: PropTypes.number.isRequired,
   recipe: PropTypes.string.isRequired,
   key2: PropTypes.number.isRequired,
-  // meal: PropTypes.shape({
-  //   idMeal: PropTypes.number.isRequired,
-  //   strMeal: PropTypes.string.isRequired,
-  //   strMealThumb: PropTypes.string.isRequired,
-  // }).isRequired,
 };

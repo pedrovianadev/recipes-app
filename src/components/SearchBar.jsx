@@ -11,6 +11,7 @@ import {
   findCocktailByName,
   findCocktailByFirstLetter,
 } from '../services/api';
+import RecipesDisplay from './RecipesDisplay';
 
 function SearchBar() {
   const { search } = useSelector((state) => state.headerSearch);
@@ -56,7 +57,6 @@ function SearchBar() {
         findCocktailByName,
         findCocktailByFirstLetter,
       );
-      console.log(getResults);
       if (!getResults) return;
       setDrinks({ ...getResults });
     }
@@ -74,7 +74,7 @@ function SearchBar() {
 
   useEffect(() => {
     if (recipes === null) return;
-    console.log(recipes, 'entrou no if');
+
     if (recipes && recipes.length === 1) {
       const { idMeal, idDrink } = recipes[0];
       if (idMeal) {
@@ -145,6 +145,8 @@ function SearchBar() {
       >
         Buscar
       </button>
+
+      <RecipesDisplay />
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
+import RecipesContext from '../context/recipesContext';
 import { setRecipe } from '../redux/reducers/headerSearch';
 import {
   findMealByIngredient,
@@ -16,6 +17,7 @@ function SearchBar() {
   const { search } = useSelector((state) => state.headerSearch);
   const [checked, setChecked] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const { meals, setMeals, drinks, setDrinks } = useContext(RecipesContext);
 
   const location = useLocation();
   const history = useHistory();
@@ -48,7 +50,7 @@ function SearchBar() {
         findMealByFirstLetter,
       );
       if (!getResults) return;
-      setRecipes(getResults.meals);
+      setMeals({ ...getResults });
     } else {
       const getResults = await showResults(
         findCocktailByIngredient,
@@ -56,14 +58,24 @@ function SearchBar() {
         findCocktailByFirstLetter,
       );
       if (!getResults) return;
-      setRecipes(getResults.drinks);
+      setDrinks({ ...getResults });
     }
   };
 
   useEffect(() => {
+    const receitas = meals?.meals;
+    setRecipes(receitas);
+  }, [meals]);
+
+  useEffect(() => {
+    const receitas = drinks?.drinks;
+    setRecipes(receitas);
+  }, [drinks]);
+
+  useEffect(() => {
     if (recipes === null) return;
 
-    if (recipes.length === 1) {
+    if (recipes && recipes.length === 1) {
       const { idMeal, idDrink } = recipes[0];
       if (idMeal) {
         history.push(`/meals/${idMeal}`);
@@ -76,7 +88,7 @@ function SearchBar() {
   useEffect(() => {
     if (recipes === null) return;
 
-    if (recipes.length > 1) {
+    if (recipes && recipes.length > 1) {
       dispatch(setRecipe(recipes));
     }
   }, [recipes, dispatch]);

@@ -71,3 +71,7 @@
   bottom: 0;
   position: fixed;
 }
+
+.Checkbox-recipes {
+  text-decoration: line-through solid black;
+}

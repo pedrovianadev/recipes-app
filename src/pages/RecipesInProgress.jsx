@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { getMealsByID, getDrinksByID } from '../services/api';
 import IngredientsCards from '../components/IngredientsCards';
-import { addRecipe } from '../services/saveFavoriteRecipes';
+import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import logo from '../images/shareIcon.svg';
-import logo2 from '../images/blackHeartIcon.svg';
-// Só pra mandar novamente o PR
 
 function RecipesInProgress() {
   const [recipe, setRecipe] = useState([]);
+  const [favRecipe, setFavRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
+  const { id } = useParams();
+
+  const checkFavorit = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    return favoriteRecipes?.some((element) => element.id === id);
+  };
+
+  const [favorited, setFavorited] = useState(checkFavorit());
+
+  const favorite = async () => {
+    if (favorited) {
+      await removeRecipe(favRecipe);
+    } else {
+      await addRecipe(favRecipe);
+    }
+    setFavorited((prevState) => !prevState);
+  };
 
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   function copyToClipboard() {
     const url = window.location.href;
-    const id = url.split('/')[4];
+    const idd = url.split('/')[4];
     const type = url.split('/')[3];
-    const textToCopy = `http://localhost:3000/${type}/${id}`;
+    const textToCopy = `http://localhost:3000/${type}/${idd}`;
     navigator.clipboard.writeText(textToCopy).then(() => {
       console.log('String copiada para o clipboard');
     }).catch((err) => {
@@ -25,26 +44,40 @@ function RecipesInProgress() {
     setMostrarMensagem(true);
   }
 
-  const favorite = async () => {
-    await addRecipe(recipe);
-  };
-
   useEffect(() => {
     const { pathname } = window.location;
-    const id = pathname.split('/')[2];
+    const idd = pathname.split('/')[2];
     const kindOfRecipe = pathname.split('/')[1];
     setTypeOfRecipe(kindOfRecipe);
 
     if (kindOfRecipe === 'meals') {
       const getMeals = async () => {
-        const response = await getMealsByID(id);
+        const response = await getMealsByID(idd);
         setRecipe(response.meals[0]);
+        setFavRecipe({
+          id: response.meals[0].idMeal,
+          type: 'meal',
+          nationality: response.meals[0].strArea,
+          category: response.meals[0].strCategory,
+          alcoholicOrNot: '',
+          name: response.meals[0].strMeal,
+          image: response.meals[0].strMealThumb,
+        });
       };
       getMeals();
     } else {
       const getDrinks = async () => {
-        const response = await getDrinksByID(id);
+        const response = await getDrinksByID(idd);
         setRecipe(response.drinks[0]);
+        setFavRecipe({
+          id: response.drinks[0].idDrink,
+          type: 'drink',
+          nationality: '',
+          category: response.drinks[0].strCategory,
+          alcoholicOrNot: response.drinks[0].strAlcoholic,
+          name: response.drinks[0].strDrink,
+          image: response.drinks[0].strDrinkThumb,
+        });
       };
       getDrinks();
     }
@@ -65,7 +98,7 @@ function RecipesInProgress() {
 
       </button>
       <button
-        src={ logo2 }
+        src={ favorited ? blackHeartIcon : whiteHeartIcon }
         data-testid="favorite-btn"
         onClick={ favorite }
       >

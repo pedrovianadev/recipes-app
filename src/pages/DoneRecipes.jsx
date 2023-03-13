@@ -4,7 +4,7 @@ import clipboardCopy from 'clipboard-copy';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
 
-export default function DoneRecipes() {
+function DoneRecipes() {
   const [notes, setNotes] = useState('');
   const [doneRecipes, setDoneRecipes] = useState([]);
   const [recipes, setRecipes] = useState([]);
@@ -114,3 +114,5 @@ export default function DoneRecipes() {
     </div>
   );
 }
+
+export default DoneRecipes;

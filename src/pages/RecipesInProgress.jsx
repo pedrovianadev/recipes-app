@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { getMealsByID, getDrinksByID } from '../services/api';
 import IngredientsCards from '../components/IngredientsCards';
+import { addRecipe } from '../services/saveFavoriteRecipes';
+import logo from '../images/shareIcon.svg';
+import logo2 from '../images/blackHeartIcon.svg';
 // Só pra mandar novamente o PR
 
 function RecipesInProgress() {
   const [recipe, setRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
+
+  const [mostrarMensagem, setMostrarMensagem] = useState(false);
+
+  function copyToClipboard() {
+    const textToCopy = window.location.href;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      console.log('String copiada para o clipboard');
+    }).catch((err) => {
+      console.error('Falha ao copiar a string para o clipboard', err);
+    });
+    setMostrarMensagem(true);
+  }
+
+  const favorite = async () => {
+    await addRecipe(recipe);
+  };
 
   useEffect(() => {
     const { pathname } = window.location;
@@ -35,17 +54,22 @@ function RecipesInProgress() {
   return (
     <div>
       <button
-        type="button"
         data-testid="share-btn"
+        src={ logo }
+        onClick={ copyToClipboard }
       >
         Compartilhar
+
       </button>
       <button
-        type="button"
+        src={ logo2 }
         data-testid="favorite-btn"
+        onClick={ favorite }
       >
-        Favoritar
+        Favorite
+
       </button>
+      {mostrarMensagem && <div>Link copied!</div>}
       <h1>Receita em progresso</h1>
       {recipe && (
         <div>

@@ -5,7 +5,7 @@ import IngredientsCards from '../components/IngredientsCards';
 import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import logo from '../images/shareIcon.svg';
+import logo from '../images/shareIcon.svg'; // arruma linte
 
 function RecipesInProgress() {
   const history = useHistory();

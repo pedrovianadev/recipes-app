@@ -1,27 +1,47 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-export default function IngredientsCards({ recipe, index, key2 }) {
-  const [completed, setCompleted] = useState(false);
+export default function IngredientsCards({ ingredient, id }) {
+  const { pathname } = useLocation();
+  const food = pathname.includes('meals') ? 'meals' : 'drinks';
+  const [completed, setCompleted] = useState(((JSON.parse(
+    localStorage.getItem('inProgressRecipes'),
+  )) || { [food]: { [id]: [] } })[food][id].includes(ingredient));
+
+  const doneIngredient = () => {
+    const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (completed) {
+      inProgressRecipes[food][id] = [...inProgressRecipes[food][id]
+        .filter((ing) => ing !== ingredient)];
+    } else {
+      inProgressRecipes[food][id] = [...inProgressRecipes[food][id], ingredient];
+    }
+    localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+  };
+
   return (
 
     <label
-      htmlFor={ key2 }
-      data-testid={ `${index}-ingredient-step` }
+      htmlFor={ ingredient }
+      data-testid="ingredient-step"
       className={ completed ? 'Checkbox-recipes' : null }
     >
       <input
         type="checkbox"
-        id={ key2 }
-        onChange={ () => setCompleted(!completed) }
+        id={ ingredient }
+        onChange={ () => {
+          doneIngredient();
+          setCompleted(!completed);
+        } }
+        defaultChecked={ completed }
       />
-      {recipe}
+      {ingredient}
     </label>
   );
 }
 
 IngredientsCards.propTypes = {
-  index: PropTypes.number.isRequired,
-  recipe: PropTypes.string.isRequired,
-  key2: PropTypes.number.isRequired,
+  ingredient: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };

@@ -7,6 +7,7 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import logo from '../images/shareIcon.svg';
 
+
 function RecipesInProgress() {
   const history = useHistory();
   const [recipe, setRecipe] = useState([]);
@@ -88,10 +89,6 @@ function RecipesInProgress() {
     }
   }, [typeOfRecipe]);
 
-  // const handleCheckbox = ({target}) => {
-  //   target.checked ? (text-decoration: line-through solid rgb(0, 0, 0)) : null;
-  // };
-
   return (
     <div>
       <button
@@ -129,13 +126,12 @@ function RecipesInProgress() {
           <ul>
             {Object.keys(recipe).map((key, index) => {
               if (key.includes('Ingredient') && recipe[key]) {
-                // const completed = false;
                 return (
                   <li key={ index }>
                     <IngredientsCards
-                      key={ key }
                       index={ index }
-                      recipe={ recipe[key] }
+                      ingredient={ recipe[key] }
+                      id={ id }
                     />
                   </li>
                 );

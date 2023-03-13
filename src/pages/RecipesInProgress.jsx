@@ -1,27 +1,88 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { getMealsByID, getDrinksByID } from '../services/api';
 import IngredientsCards from '../components/IngredientsCards';
+import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+import logo from '../images/shareIcon.svg';
 
 function RecipesInProgress() {
+  const history = useHistory();
   const [recipe, setRecipe] = useState([]);
+  const [favRecipe, setFavRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
-  const { pathname } = window.location;
-  const id = pathname.split('/')[2];
+  const { id } = useParams();
+
+  const checkFavorit = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    return favoriteRecipes?.some((element) => element.id === id);
+  };
+
+  const [favorited, setFavorited] = useState(checkFavorit());
+
+  const favorite = async () => {
+    if (favorited) {
+      await removeRecipe(favRecipe);
+    } else {
+      await addRecipe(favRecipe);
+    }
+    setFavorited((prevState) => !prevState);
+  };
+
+  const [mostrarMensagem, setMostrarMensagem] = useState(false);
+
+  function copyToClipboard() {
+    const url = window.location.href;
+    const idd = url.split('/')[4];
+    const type = url.split('/')[3];
+    const textToCopy = `http://localhost:3000/${type}/${idd}`;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      console.log('String copiada para o clipboard');
+    }).catch((err) => {
+      console.error('Falha ao copiar a string para o clipboard', err);
+    });
+    setMostrarMensagem(true);
+  }
+
+  const handleClick = () => {
+    history.push('/done-recipes');
+  };
 
   useEffect(() => {
+    const { pathname } = window.location;
+    const idd = pathname.split('/')[2];
     const kindOfRecipe = pathname.split('/')[1];
     setTypeOfRecipe(kindOfRecipe);
 
     if (kindOfRecipe === 'meals') {
       const getMeals = async () => {
-        const response = await getMealsByID(id);
+        const response = await getMealsByID(idd);
         setRecipe(response.meals[0]);
+        setFavRecipe({
+          id: response.meals[0].idMeal,
+          type: 'meal',
+          nationality: response.meals[0].strArea,
+          category: response.meals[0].strCategory,
+          alcoholicOrNot: '',
+          name: response.meals[0].strMeal,
+          image: response.meals[0].strMealThumb,
+        });
       };
       getMeals();
     } else {
       const getDrinks = async () => {
-        const response = await getDrinksByID(id);
+        const response = await getDrinksByID(idd);
         setRecipe(response.drinks[0]);
+        setFavRecipe({
+          id: response.drinks[0].idDrink,
+          type: 'drink',
+          nationality: '',
+          category: response.drinks[0].strCategory,
+          alcoholicOrNot: response.drinks[0].strAlcoholic,
+          name: response.drinks[0].strDrink,
+          image: response.drinks[0].strDrinkThumb,
+        });
       };
       getDrinks();
     }
@@ -30,17 +91,22 @@ function RecipesInProgress() {
   return (
     <div>
       <button
-        type="button"
         data-testid="share-btn"
+        src={ logo }
+        onClick={ copyToClipboard }
       >
         Compartilhar
+
       </button>
       <button
-        type="button"
+        src={ favorited ? blackHeartIcon : whiteHeartIcon }
         data-testid="favorite-btn"
+        onClick={ favorite }
       >
-        Favoritar
+        Favorite
+
       </button>
+      {mostrarMensagem && <div>Link copied!</div>}
       <h1>Receita em progresso</h1>
       {recipe && (
         <div>
@@ -75,6 +141,7 @@ function RecipesInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            onClick={ handleClick }
           >
             Finalizar Receita
           </button>

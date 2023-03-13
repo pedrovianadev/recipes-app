@@ -19,7 +19,7 @@ function FavoriteDrinkCard({ recipe, index }) {
   const removeFavorite = async () => {
     await removeRecipe(recipe);
   };
-  console.log(recipe);
+  console.log(index, recipe);
   return (
     <div>
       <img
@@ -31,7 +31,6 @@ function FavoriteDrinkCard({ recipe, index }) {
         data-testid={ `${index}-horizontal-name` }
       >
         {recipe.name}
-
       </h3>
       <p
         data-testid={ `${index}-horizontal-top-text` }

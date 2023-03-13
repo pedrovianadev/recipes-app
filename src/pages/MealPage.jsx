@@ -8,7 +8,7 @@ function MealPage() {
   let inProgressRecipes = JSON
     .parse(localStorage.getItem('inProgressRecipes')) || { drinks: {}, meals: {} };
   const handleStartRecipe = () => {
-    inProgressRecipes = { ...inProgressRecipes, meals: { [id]: [] } };
+    inProgressRecipes = { ...inProgressRecipes, meals: { [id]: [], 52771: [] } };
     localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
     history.push(`/meals/${id}/in-progress`);
   };

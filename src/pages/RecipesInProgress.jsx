@@ -5,10 +5,10 @@ import IngredientsCards from '../components/IngredientsCards';
 function RecipesInProgress() {
   const [recipe, setRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
+  const { pathname } = window.location;
+  const id = pathname.split('/')[2];
 
   useEffect(() => {
-    const { pathname } = window.location;
-    const id = pathname.split('/')[2];
     const kindOfRecipe = pathname.split('/')[1];
     setTypeOfRecipe(kindOfRecipe);
 
@@ -62,9 +62,9 @@ function RecipesInProgress() {
                 return (
                   <li key={ index }>
                     <IngredientsCards
-                      key={ key }
                       index={ index }
-                      recipe={ recipe[key] }
+                      ingredient={ recipe[key] }
+                      id={ id }
                     />
                   </li>
                 );

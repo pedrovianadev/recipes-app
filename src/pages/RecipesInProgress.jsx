@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import clipboardCopy from 'clipboard-copy';
 import { getMealsByID, getDrinksByID } from '../services/api';
+import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
 import IngredientsCards from '../components/IngredientsCards';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 const START_INDEX = -1;
 let index = START_INDEX;
@@ -8,6 +12,8 @@ let index = START_INDEX;
 function RecipesInProgress() {
   const [recipe, setRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
+  const [notes, setNotes] = useState('');
+  const [disabled, setDisabled] = useState(true);
   const { pathname } = window.location;
   const id = pathname.split('/')[2];
   let inProgressRecipes = JSON
@@ -38,6 +44,36 @@ function RecipesInProgress() {
     }
   }, [typeOfRecipe]);
 
+  const favRecipe = {
+    id,
+    type: typeOfRecipe.slice(0, START_INDEX),
+    nationality: recipe.strArea || '',
+    category: recipe.strCategory,
+    alcoholicOrNot: typeOfRecipe === 'meals' ? '' : recipe.strAlcoholic,
+    name: recipe[typeOfRecipe === 'meals' ? 'strMeal' : 'strDrink'],
+    image: recipe[typeOfRecipe === 'meals' ? 'strMealThumb' : 'strDrinkThumb'],
+  };
+
+  const copy = async () => {
+    await clipboardCopy(`http://localhost:3000/${typeOfRecipe}/${id}`); setNotes('Link copied!');
+  };
+
+  const checkFavorit = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    return favoriteRecipes?.some((element) => element.id === id);
+  };
+
+  const [favorited, setFavorited] = useState(checkFavorit());
+
+  const favorite = async () => {
+    if (favorited) {
+      await removeRecipe(favRecipe);
+    } else {
+      await addRecipe(favRecipe);
+    }
+    setFavorited((prevState) => !prevState);
+  };
+
   console.log(recipe);
 
   return (
@@ -45,14 +81,18 @@ function RecipesInProgress() {
       <button
         type="button"
         data-testid="share-btn"
+        onClick={ copy }
       >
         Compartilhar
       </button>
+      {notes}
       <button
-        type="button"
         data-testid="favorite-btn"
+        onClick={ favorite }
+        src={ favorited ? blackHeartIcon : whiteHeartIcon }
       >
-        Favoritar
+        Favorite
+        <img src={ favorited ? blackHeartIcon : whiteHeartIcon } alt="" />
       </button>
       <h1>Receita em progresso</h1>
       {recipe && (
@@ -76,6 +116,7 @@ function RecipesInProgress() {
                 return (
                   <li key={ index }>
                     <IngredientsCards
+                      setDisabled={ setDisabled }
                       index={ index }
                       ingredient={ recipe[key] }
                       id={ id }
@@ -89,6 +130,7 @@ function RecipesInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            disabled={ disabled }
           >
             Finalizar Receita
           </button>

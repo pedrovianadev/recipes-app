@@ -25,8 +25,6 @@ export default function IngredientsCards({ ingredient, id, index }) {
     localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
   };
 
-  console.log(index);
-
   return (
 
     <label

@@ -8,7 +8,6 @@ export default function IngredientsCards({ ingredient, id, index }) {
   const [completed, setCompleted] = useState(((JSON.parse(
     localStorage.getItem('inProgressRecipes'),
   )) || { [food]: { [id]: [] } })[food][id].includes(ingredient));
-
   const doneIngredient = () => {
     const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'))
     || { drinks: { 178319: [] }, meals: { 52771: [] } };
@@ -45,7 +44,6 @@ export default function IngredientsCards({ ingredient, id, index }) {
     </label>
   );
 }
-
 IngredientsCards.propTypes = {
   ingredient: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,

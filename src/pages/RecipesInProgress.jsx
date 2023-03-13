@@ -13,7 +13,10 @@ function RecipesInProgress() {
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   function copyToClipboard() {
-    const textToCopy = window.location.href;
+    const url = window.location.href;
+    const id = url.split('/')[4];
+    const type = url.split('/')[3];
+    const textToCopy = `http://localhost:3000/${type}/${id}`;
     navigator.clipboard.writeText(textToCopy).then(() => {
       console.log('String copiada para o clipboard');
     }).catch((err) => {

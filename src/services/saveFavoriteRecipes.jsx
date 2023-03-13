@@ -16,10 +16,10 @@ const simulateRequest = (response) => (callback) => {
   }, TIMEOUT);
 };
 
-export const getFavoriteRecipes = () => new Promise((resolve) => {
+export const getFavoriteRecipes = () => {
   const favoriteRecipes = readFavoriteRecipes();
-  simulateRequest(favoriteRecipes)(resolve);
-});
+  return (favoriteRecipes);
+};
 
 export const addRecipe = (recipe) => new Promise((resolve) => {
   if (recipe) {

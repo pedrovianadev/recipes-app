@@ -14,8 +14,8 @@ function FavoriteRecipes() {
 
   useEffect(
     () => {
-      const showRecipes = async () => {
-        const recipes = await getFavoriteRecipes();
+      const showRecipes = () => {
+        const recipes = getFavoriteRecipes();
         if (filter.all === true) {
           setArray(recipes);
         } else if (filter.meal === true) {
@@ -30,6 +30,7 @@ function FavoriteRecipes() {
     },
     [array, filter],
   );
+
   const handleMeal = () => {
     setFilter(
       { meal: true,

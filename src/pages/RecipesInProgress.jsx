@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { getMealsByID, getDrinksByID } from '../services/api';
 import IngredientsCards from '../components/IngredientsCards';
-// Só pra mandar novamente o PR
 
 function RecipesInProgress() {
   const [recipe, setRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
+  const { pathname } = window.location;
+  const id = pathname.split('/')[2];
 
   useEffect(() => {
-    const { pathname } = window.location;
-    const id = pathname.split('/')[2];
     const kindOfRecipe = pathname.split('/')[1];
     setTypeOfRecipe(kindOfRecipe);
 
@@ -27,10 +26,6 @@ function RecipesInProgress() {
       getDrinks();
     }
   }, [typeOfRecipe]);
-
-  // const handleCheckbox = ({target}) => {
-  //   target.checked ? (text-decoration: line-through solid rgb(0, 0, 0)) : null;
-  // };
 
   return (
     <div>
@@ -64,13 +59,12 @@ function RecipesInProgress() {
           <ul>
             {Object.keys(recipe).map((key, index) => {
               if (key.includes('Ingredient') && recipe[key]) {
-                // const completed = false;
                 return (
                   <li key={ index }>
                     <IngredientsCards
-                      key={ key }
                       index={ index }
-                      recipe={ recipe[key] }
+                      ingredient={ recipe[key] }
+                      id={ id }
                     />
                   </li>
                 );

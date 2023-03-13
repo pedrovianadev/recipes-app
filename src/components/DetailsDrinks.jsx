@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { RecommendationCard } from './RecommendationCard';
-import { addRecipe } from '../services/saveFavoriteRecipes';
+import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 export function DetailsDrinks() {
   const [drinkDetails, setDrinkDetails] = useState({});
@@ -9,8 +11,14 @@ export function DetailsDrinks() {
   const [measures, setMeasures] = useState([]);
   const [stateMeals, setStateMeals] = useState([]);
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
-
   const { id } = useParams();
+
+  const checkFavorit = () => {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    return favoriteRecipes?.some((element) => element.id === id);
+  };
+
+  const [favorited, setFavorited] = useState(checkFavorit());
 
   const handleIngredients = (detailsObj) => {
     const getIngredients = Object.entries(detailsObj);
@@ -69,10 +77,13 @@ export function DetailsDrinks() {
     image: drinkDetails.strDrinkThumb,
   };
 
-  console.log(drinkDetails);
-
   const favorite = async () => {
-    await addRecipe(recipe);
+    if (favorited) {
+      await removeRecipe(recipe);
+    } else {
+      await addRecipe(recipe);
+    }
+    setFavorited((prevState) => !prevState);
   };
 
   useEffect(() => {
@@ -83,7 +94,14 @@ export function DetailsDrinks() {
   return (
     <div>
       <button data-testid="share-btn" onClick={ copyToClipboard }>Compartilhar</button>
-      <button data-testid="favorite-btn" onClick={ favorite }>Favorite</button>
+      <button
+        data-testid="favorite-btn"
+        onClick={ favorite }
+        src={ favorited ? blackHeartIcon : whiteHeartIcon }
+      >
+        Favorite
+        <img src={ favorited ? blackHeartIcon : whiteHeartIcon } alt="" />
+      </button>
       {mostrarMensagem && <div>Link copied!</div>}
       <img
         src={ drinkDetails.strDrinkThumb }

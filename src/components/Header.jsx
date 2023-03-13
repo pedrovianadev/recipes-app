@@ -31,14 +31,16 @@ function Header({ title, haveSearch }) {
         </button>
       )}
       {searcher && (
-        <input
-          type="text"
-          data-testid="search-input"
-          placeholder="Buscar Receita"
-          onChange={ handleChange }
-        />
+        <>
+          <input
+            type="text"
+            data-testid="search-input"
+            placeholder="Buscar Receita"
+            onChange={ handleChange }
+          />
+          <SearchBar />
+        </>
       )}
-      <SearchBar />
     </div>
   );
 }

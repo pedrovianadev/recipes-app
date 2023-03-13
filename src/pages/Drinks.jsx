@@ -5,6 +5,8 @@ import DrinkCard from '../components/DrinkCard';
 import RecipesContext from '../context/recipesContext';
 import { findDrinkByCategory, drinksRequest } from '../services/api';
 
+// SÓ PRA DAR O PR
+
 function Drinks() {
   const { drinks, drinksCategories, setDrinks } = useContext(RecipesContext);
   const slice = 12;

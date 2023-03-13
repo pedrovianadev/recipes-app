@@ -11,7 +11,6 @@ import {
   findCocktailByName,
   findCocktailByFirstLetter,
 } from '../services/api';
-import RecipesDisplay from './RecipesDisplay';
 
 function SearchBar() {
   const { search } = useSelector((state) => state.headerSearch);
@@ -146,7 +145,6 @@ function SearchBar() {
         Buscar
       </button>
 
-      <RecipesDisplay />
     </div>
   );
 }

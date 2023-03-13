@@ -1,41 +1,72 @@
 import React from 'react';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
-import renderWithRouter from './renderWithRouter/renderWithRouter';
+import renderWithRouterAndRedux from './renderWithRouter/renderWithRouter';
 
-describe('Testes da página de Login', () => {
-  it('testa se o botão fica desabilitado ou habilitado', () => {
-    renderWithRouter(<App />);
-    const view = screen.getByText(/email:/i);
-    const textInput = within(view).getByRole('textbox');
-    userEvent.type(textInput, 'teste@teste.com');
+const emailTestId = 'email-input';
+const passwordTestId = 'password-input';
+const submitTestId = 'login-submit-btn';
 
-    const button = screen.getByRole('button', {
-      name: /enter/i,
+describe('Teste da tela de login', () => {
+  it('Testa se componentes são renderizados de forma correta', () => {
+    const mockLogin = jest.fn();
+
+    renderWithRouterAndRedux(<App />);
+    const email = screen.getByTestId(emailTestId);
+    const password = screen.getByTestId(passwordTestId);
+    const loginButton = screen.getByTestId(submitTestId);
+
+    const correctEmail = 'test@test.com';
+    const correctPass = '1234567';
+
+    expect(email).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    expect(loginButton).toBeInTheDocument();
+    expect(loginButton).toBeDisabled();
+
+    userEvent.type(email, correctEmail);
+    userEvent.type(password, correctPass);
+    expect(loginButton).toBeEnabled();
+
+    waitFor(() => {
+      userEvent.click(loginButton);
+      expect(mockLogin).toBeCalledTimes(1);
     });
-
-    expect(button).toBeDisabled();
-
-    const view2 = screen.getByText(/senha:/i);
-    const senhaInput = within(view2).getByRole('textbox');
-    userEvent.type(senhaInput, '1234567');
-
-    expect(button).not.toBeDisabled();
   });
-  it('testa se redireciona', async () => {
-    renderWithRouter(<App />);
-    const view = screen.getByText(/email:/i);
-    const textInput = within(view).getByRole('textbox');
-    userEvent.type(textInput, 'teste@teste.com');
 
-    const button = screen.getByRole('button', {
-      name: /enter/i,
+  it('Testa se o botão de login é desabilitado quando o email ou a senha não inválidos', () => {
+    renderWithRouterAndRedux(<App />);
+    const email = screen.getByTestId(emailTestId);
+    const password = screen.getByTestId(passwordTestId);
+    const loginButton = screen.getByTestId(submitTestId);
+
+    const wrongEmail = 'testandoEle';
+    const wrongPass = '123456';
+
+    expect(loginButton).toBeDisabled();
+
+    userEvent.type(email, wrongEmail);
+    userEvent.type(password, wrongPass);
+    expect(loginButton).toBeDisabled();
+  });
+
+  it('Testa se ao clicar no botão de login é redirecionado para a página de receitas', () => {
+    renderWithRouterAndRedux(<App />);
+    const email = screen.getByTestId(emailTestId);
+    const password = screen.getByTestId(passwordTestId);
+    const loginButton = screen.getByTestId(submitTestId);
+
+    const correctEmail = 'test@test.com';
+    const correctPass = '1234567';
+
+    userEvent.type(email, correctEmail);
+    userEvent.type(password, correctPass);
+    waitFor(() => {
+      userEvent.click(loginButton);
+      const pageTitle = screen.getByTestId('page-title');
+      expect(pageTitle).toBeInTheDocument();
+      expect(pageTitle).toHaveTextContent('Meals');
     });
-
-    const view2 = screen.getByText(/senha:/i);
-    const senhaInput = within(view2).getByRole('textbox');
-    userEvent.type(senhaInput, '1234567');
-    userEvent.click(button);
   });
 });

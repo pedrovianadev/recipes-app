@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { getMealsByID, getDrinksByID } from '../services/api';
 import IngredientsCards from '../components/IngredientsCards';
 import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
@@ -8,6 +8,7 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 import logo from '../images/shareIcon.svg';
 
 function RecipesInProgress() {
+  const history = useHistory();
   const [recipe, setRecipe] = useState([]);
   const [favRecipe, setFavRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
@@ -43,6 +44,10 @@ function RecipesInProgress() {
     });
     setMostrarMensagem(true);
   }
+
+  const handleClick = () => {
+    history.push('/done-recipes');
+  };
 
   useEffect(() => {
     const { pathname } = window.location;
@@ -141,6 +146,7 @@ function RecipesInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            onClick={ handleClick }
           >
             Finalizar Receita
           </button>

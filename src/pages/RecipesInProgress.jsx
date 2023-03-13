@@ -134,6 +134,7 @@ function RecipesInProgress() {
                 return (
                   <li key={ index }>
                     <IngredientsCards
+                      setDisabled={ setDisabled }
                       index={ index }
                       ingredient={ recipe[key] }
                       id={ id }

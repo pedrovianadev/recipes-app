@@ -1,18 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import clipboardCopy from 'clipboard-copy';
 import { getMealsByID, getDrinksByID } from '../services/api';
-import IngredientsCards from '../components/IngredientsCards';
 import { addRecipe, removeRecipe } from '../services/saveFavoriteRecipes';
+import IngredientsCards from '../components/IngredientsCards';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import logo from '../images/shareIcon.svg';
+
+const START_INDEX = -1;
+let index = START_INDEX;
 
 function RecipesInProgress() {
-  const history = useHistory();
   const [recipe, setRecipe] = useState([]);
-  const [favRecipe, setFavRecipe] = useState([]);
   const [typeOfRecipe, setTypeOfRecipe] = useState('');
-  const { id } = useParams();
+  const [notes, setNotes] = useState('');
+  const [disabled, setDisabled] = useState(true);
+  const { pathname } = window.location;
+  const id = pathname.split('/')[2];
+  let inProgressRecipes = JSON
+    .parse(localStorage.getItem('inProgressRecipes'))
+    || { drinks: { 178319: [] }, meals: { 52771: [] } };
+  useEffect(() => {
+    const kindOfRecipe = pathname.split('/')[1];
+    setTypeOfRecipe(kindOfRecipe);
+    if (kindOfRecipe === 'meals') {
+      const getMeals = async () => {
+        const response = await getMealsByID(id);
+        console.log(response, 'linha 21');
+        setRecipe(response.meals[0]);
+      };
+      getMeals();
+    } else {
+      const getDrinks = async () => {
+        const response = await getDrinksByID(id);
+        setRecipe(response.drinks[0]);
+      };
+      getDrinks();
+    }
+    if (!inProgressRecipes[kindOfRecipe]) {
+      inProgressRecipes = { ...inProgressRecipes, [kindOfRecipe]: { [id]: [] } };
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgressRecipes));
+    }
+  }, [typeOfRecipe]);
+
+  const favRecipe = {
+    id,
+    type: typeOfRecipe.slice(0, START_INDEX),
+    nationality: recipe.strArea || '',
+    category: recipe.strCategory,
+    alcoholicOrNot: typeOfRecipe === 'meals' ? '' : recipe.strAlcoholic,
+    name: recipe[typeOfRecipe === 'meals' ? 'strMeal' : 'strDrink'],
+    image: recipe[typeOfRecipe === 'meals' ? 'strMealThumb' : 'strDrinkThumb'],
+  };
+
+  const copy = async () => {
+    await clipboardCopy(`http://localhost:3000/${typeOfRecipe}/${id}`); setNotes('Link copied!');
+  };
 
   const checkFavorit = () => {
     const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
@@ -30,83 +72,27 @@ function RecipesInProgress() {
     setFavorited((prevState) => !prevState);
   };
 
-  const [mostrarMensagem, setMostrarMensagem] = useState(false);
-
-  function copyToClipboard() {
-    const url = window.location.href;
-    const idd = url.split('/')[4];
-    const type = url.split('/')[3];
-    const textToCopy = `http://localhost:3000/${type}/${idd}`;
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      console.log('String copiada para o clipboard');
-    }).catch((err) => {
-      console.error('Falha ao copiar a string para o clipboard', err);
-    });
-    setMostrarMensagem(true);
-  }
-
-  const handleClick = () => {
-    history.push('/done-recipes');
-  };
-
-  useEffect(() => {
-    const { pathname } = window.location;
-    const idd = pathname.split('/')[2];
-    const kindOfRecipe = pathname.split('/')[1];
-    setTypeOfRecipe(kindOfRecipe);
-
-    if (kindOfRecipe === 'meals') {
-      const getMeals = async () => {
-        const response = await getMealsByID(idd);
-        setRecipe(response.meals[0]);
-        setFavRecipe({
-          id: response.meals[0].idMeal,
-          type: 'meal',
-          nationality: response.meals[0].strArea,
-          category: response.meals[0].strCategory,
-          alcoholicOrNot: '',
-          name: response.meals[0].strMeal,
-          image: response.meals[0].strMealThumb,
-        });
-      };
-      getMeals();
-    } else {
-      const getDrinks = async () => {
-        const response = await getDrinksByID(idd);
-        setRecipe(response.drinks[0]);
-        setFavRecipe({
-          id: response.drinks[0].idDrink,
-          type: 'drink',
-          nationality: '',
-          category: response.drinks[0].strCategory,
-          alcoholicOrNot: response.drinks[0].strAlcoholic,
-          name: response.drinks[0].strDrink,
-          image: response.drinks[0].strDrinkThumb,
-        });
-      };
-      getDrinks();
-    }
-  }, [typeOfRecipe]);
+  console.log(recipe);
 
   return (
     <div>
       <button
+        type="button"
         data-testid="share-btn"
-        src={ logo }
-        onClick={ copyToClipboard }
+        onClick={ copy }
       >
         Compartilhar
-
       </button>
+      {notes}
       <button
-        src={ favorited ? blackHeartIcon : whiteHeartIcon }
+        type="button"
         data-testid="favorite-btn"
         onClick={ favorite }
+        src={ favorited ? blackHeartIcon : whiteHeartIcon }
       >
         Favorite
-
+        <img src={ favorited ? blackHeartIcon : whiteHeartIcon } alt="" />
       </button>
-      {mostrarMensagem && <div>Link copied!</div>}
       <h1>Receita em progresso</h1>
       {recipe && (
         <div>
@@ -123,11 +109,13 @@ function RecipesInProgress() {
           <p data-testid="instructions">{recipe.strInstructions}</p>
           <h2>Ingredientes</h2>
           <ul>
-            {Object.keys(recipe).map((key, index) => {
+            {Object.keys(recipe).map((key) => {
               if (key.includes('Ingredient') && recipe[key]) {
+                index += 1;
                 return (
                   <li key={ index }>
                     <IngredientsCards
+                      setDisabled={ setDisabled }
                       index={ index }
                       ingredient={ recipe[key] }
                       id={ id }
@@ -141,7 +129,7 @@ function RecipesInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
-            onClick={ handleClick }
+            disabled={ disabled }
           >
             Finalizar Receita
           </button>
@@ -150,5 +138,4 @@ function RecipesInProgress() {
     </div>
   );
 }
-
 export default RecipesInProgress;
